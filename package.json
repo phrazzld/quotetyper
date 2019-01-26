@@ -1,0 +1,17 @@
+{
+  "name": "quotetyper",
+  "version": "1.0.0",
+  "description": "Type quotes fast",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Phaedrus and Nathan",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.6",
+    "passport": "^0.4.0"
+  }
+}
