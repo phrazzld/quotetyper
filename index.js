@@ -6,6 +6,7 @@ const app = express()
 const port = process.env.port || 8080
 const mongoose = require('mongoose')
 const config = require('./config')
+const apiRoutes = require('./api-routes')
 
 // Pull database configuration and connect to the database
 mongoose.connect(config.mongoUrl, { server: { reconnectTries: Number.MAX_VALUE } })
@@ -21,11 +22,8 @@ mongoose.connection
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// Route definitions
-app.get('/test', function (req, res) {
-  console.log('GET request to /test received')
-  res.json({ message: 'API operational' })
-})
+// Use API routes
+app.use('/api', apiRoutes)
 
 app.listen(config.port)
 console.log('Port', config.port, 'goes "whirrr..."')
