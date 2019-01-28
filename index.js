@@ -5,30 +5,27 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = process.env.port || 8080
 const mongoose = require('mongoose')
-const dbconfig = require('./config/database')
+const config = require('./config')
 
 // Pull database configuration and connect to the database
-mongoose.connect(dbconfig.database)
+mongoose.connect(config.mongoUrl, { server: { reconnectTries: Number.MAX_VALUE } })
+mongoose.connection
+  .once('open', function () {
+    console.log('Mongoose successfully connected to Mongo')
+  })
+  .on('error', function (err) {
+    console.error('Mongoose failed to connect to Mongo --', err)
+  })
 
 // Handle x-www-form-urlencoded requests
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// Log an alert if we're using the fallback database secret
-if (dbconfig.secret === 'super-secure-fallback-secret') {
-  console.log('INSECURE DATABASE SECRET -- PROCEED WITH CAUTION')
-}
-
-// Initialize Express Router
-const router = express.Router()
-// Define middleware
-router.use(function (req, res, next) {
-  next()
+// Route definitions
+app.get('/test', function (req, res) {
+  console.log('GET request to /test received')
+  res.json({ message: 'API operational' })
 })
-// Pull defined routes
-const routes = require('./app/routes')(router)
-// Register routes at the app's root prefix
-app.use('/', router)
 
-app.listen(port)
-console.log('Port', port, 'goes "whirrr..."')
+app.listen(config.port)
+console.log('Port', config.port, 'goes "whirrr..."')
