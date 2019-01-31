@@ -1,12 +1,13 @@
 // server.js
 
+require('module-alias/register')
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const port = process.env.port || 8080
 const mongoose = require('mongoose')
-const config = require('./config')
-const routes = require('./routes/index')
+const config = require('@root/config')
+const routes = require('@routes/index')
 
 // Pull database configuration and connect to the database
 mongoose.connect(config.mongoUrl, { server: { reconnectTries: Number.MAX_VALUE } })
@@ -19,9 +20,9 @@ mongoose.connection
   })
 
 // Load models
-const User = require('./models/user')
-const Quote = require('./models/quote')
-const passportConfig = require('./passport')
+const User = require('@models/user')
+const Quote = require('@models/quote')
+const passportConfig = require('@root/passport')
 
 // Handle x-www-form-urlencoded requests
 app.use(bodyParser.json())

@@ -1,8 +1,8 @@
 // routes/api/users.js
 
-const User = require('../../models/user')
+const User = require('@models/user')
 const passport = require('passport')
-const auth = require('../../auth')
+const auth = require('@root/auth')
 let router = require('express').Router()
 
 // User routes

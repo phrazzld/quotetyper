@@ -1,8 +1,8 @@
 // routes/api/quotes.js
 
-const Quote = require('../../models/quote')
+const Quote = require('@models/quote')
 const passport = require('passport')
-const auth = require('../../auth')
+const auth = require('@root/auth')
 let router = require('express').Router()
 
 // Get all quotes
