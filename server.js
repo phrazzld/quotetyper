@@ -1,4 +1,4 @@
-'use strict'
+// server.js
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -6,7 +6,7 @@ const app = express()
 const port = process.env.port || 8080
 const mongoose = require('mongoose')
 const config = require('./config')
-const apiRoutes = require('./api-routes')
+const routes = require('./routes/index')
 
 // Pull database configuration and connect to the database
 mongoose.connect(config.mongoUrl, { server: { reconnectTries: Number.MAX_VALUE } })
@@ -20,6 +20,7 @@ mongoose.connection
 
 // Load models
 const User = require('./models/user')
+const Quote = require('./models/quote')
 const passportConfig = require('./passport')
 
 // Handle x-www-form-urlencoded requests
@@ -27,7 +28,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // Use API routes
-app.use('/api', apiRoutes)
+app.use('/', routes)
 
 app.listen(config.port)
 console.log('Port', config.port, 'goes "whirrr..."')

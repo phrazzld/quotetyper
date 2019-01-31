@@ -2,10 +2,10 @@
   "name": "quotetyper",
   "version": "1.0.0",
   "description": "Type quotes fast",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "build": "babel index.js",
-    "start": "npm run build && nodemon index.js",
+    "build": "babel server.js",
+    "start": "npm run build && nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Phaedrus and Nathan",
