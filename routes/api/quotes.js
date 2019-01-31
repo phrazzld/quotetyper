@@ -1,19 +1,18 @@
 // routes/api/quotes.js
 
 const Quote = require('@models/quote')
-const passport = require('passport')
 const auth = require('@root/auth')
 let router = require('express').Router()
 
 // Get all quotes
-router.get('/', (req, res) => {
+router.get('/', auth.optional, (req, res) => {
   Quote.find().lean().exec((err, quotes) => {
     return res.json(quotes)
   })
 })
 
 // Create a new quote
-router.post('/', (req, res) => {
+router.post('/', auth.required, (req, res) => {
   Quote.create({
     text: req.body.text,
     author: req.body.author,
@@ -31,7 +30,7 @@ router.post('/', (req, res) => {
 })
 
 // Get a quote by _id
-router.get('/:quote_id', (req, res) => {
+router.get('/:quote_id', auth.optional, (req, res) => {
   Quote.findOne({ _id: req.params.quote_id }, (err, result) => {
     if (err) {
       console.log('Error finding quote')
@@ -45,7 +44,7 @@ router.get('/:quote_id', (req, res) => {
 })
 
 // Delete a quote
-router.delete('/:quote_id', (req, res) => {
+router.delete('/:quote_id', auth.required, (req, res) => {
   Quote.deleteOne({ _id: req.params.quote_id }, (err, result) => {
     if (err) {
       console.log('Error deleting quote')
@@ -60,7 +59,7 @@ router.delete('/:quote_id', (req, res) => {
 
 
 // Update a quote
-router.put('/:quote_id', (req, res) => {
+router.put('/:quote_id', auth.required, (req, res) => {
   Quote.updateOne({
     _id: req.params.quote_id
   }, {
