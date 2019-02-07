@@ -12,8 +12,14 @@ const TestSchema = new Schema({
     type: Number,
     required: true
   },
-  quote: [{ type: Schema.Types.ObjectId, ref: 'Quote' }],
-  user: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  quote: {
+    type: Schema.Types.ObjectId,
+    ref: 'Quote'
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }
 }, {
   timestamps: true
 })
