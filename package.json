@@ -4,7 +4,7 @@
   "description": "Type quotes fast",
   "main": "server.js",
   "scripts": {
-    "build": "babel server.js",
+    "build": "node server.js",
     "start": "npm run build && nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
     "jsonwebtoken": "^8.4.0",
     "module-alias": "^2.1.0",
     "mongoose": "^5.4.6",
+    "nodemon": "^1.18.9",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0"
   },
