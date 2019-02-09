@@ -1,7 +1,9 @@
 // routes/api/quotes.js
 
 const Quote = require('@models/quote')
-const auth = require('@root/auth')
+const auth = require('@root/auth').auth
+const config = require('@root/config')
+const log = config.loggers.dev()
 let router = require('express').Router()
 
 // Get all quotes
@@ -19,11 +21,11 @@ router.post('/', auth.required, (req, res) => {
     source: req.body.source
   }, (err, result) => {
     if (err) {
-      console.log('Error saving Quote record')
-      console.error(err)
+      log.info('Error saving Quote record')
+      log.fatal(err)
       res.status(500).send('Failed to save quote')
     } else {
-      console.log('Successfully saved quote')
+      log.info('Successfully saved quote')
       res.json(result)
     }
   })
@@ -33,11 +35,11 @@ router.post('/', auth.required, (req, res) => {
 router.get('/:quote_id', auth.optional, (req, res) => {
   Quote.findOne({ _id: req.params.quote_id }, (err, result) => {
     if (err) {
-      console.log('Error finding quote')
-      console.error(err)
+      log.info('Error finding quote')
+      log.fatal(err)
       res.status(500).send('Failed to find quote')
     } else {
-      console.log('Successfully found quote')
+      log.info('Successfully found quote')
       res.json(result)
     }
   })
@@ -47,11 +49,11 @@ router.get('/:quote_id', auth.optional, (req, res) => {
 router.delete('/:quote_id', auth.required, (req, res) => {
   Quote.deleteOne({ _id: req.params.quote_id }, (err, result) => {
     if (err) {
-      console.log('Error deleting quote')
-      console.error(err)
+      log.info('Error deleting quote')
+      log.fatal(err)
       res.status(500).send('Failed to deleting quote')
     } else {
-      console.log('Successfully deleted quote')
+      log.info('Successfully deleted quote')
       res.json(result)
     }
   })
@@ -68,11 +70,11 @@ router.put('/:quote_id', auth.required, (req, res) => {
     source: req.body.source
   }, (err, result) => {
     if (err) {
-      console.log('Error updating quote')
-      console.error(err)
+      log.info('Error updating quote')
+      log.fatal(err)
       res.status(500).send('Failed to update quote')
     } else {
-      console.log('Successfully updated quote')
+      log.info('Successfully updated quote')
       res.json(result)
     }
   })

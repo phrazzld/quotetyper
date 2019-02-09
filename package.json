@@ -4,16 +4,20 @@
   "description": "Type quotes fast",
   "main": "server.js",
   "scripts": {
-    "build": "node server.js",
-    "start": "npm run build && nodemon server.js",
+    "build": "babel server.js",
+    "start": "npm run build && nodemon server.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Phaedrus and Nathan",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "bunyan": "^1.8.12",
+    "connect-mongo": "^2.0.3",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
+    "express-session": "^1.15.6",
     "jsonwebtoken": "^8.4.0",
     "module-alias": "^2.1.0",
     "mongoose": "^5.4.6",

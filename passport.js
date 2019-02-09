@@ -2,19 +2,37 @@
 
 const mongoose = require('mongoose')
 const passport = require('passport')
-const LocalStrategy = require('passport-local')
+const LocalStrategy = require('passport-local').Strategy
 
 const User = require('@models/user')
 
 passport.use(new LocalStrategy({
-  usernameField: 'user[email]',
-  passwordField: 'user[password]'
-}, (email, password, done) => {
-  User.findOne({ email })
-    .then((user) => {
-      if(!user || !user.validatePassword(password)) {
-        return done(null, false, { errors: { 'email or password': 'is invalid' } })
-      }
-      return done(null, user)
-    }).catch(done)
+  usernameField: 'email',
+}, async (email, password, done) => {
+  try {
+    const user = await User.findOne({ email }).exec()
+    if (!user) {
+      return done(null, false, { message: 'Invalid username or password' })
+    }
+    const validPassword = await user.validatePassword(password)
+    if (!validPassword) {
+      return done(null, false, { message: 'Invalid username or password' })
+    }
+    return done(null, user)
+  } catch (err) {
+    return done(err)
+  }
 }))
+
+passport.serializeUser((user, done) => {
+  return done(null, user._id)
+})
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id).exec()
+    return done(null, user)
+  } catch (err) {
+    return done(err)
+  }
+})

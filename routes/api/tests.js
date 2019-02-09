@@ -2,7 +2,9 @@
 
 const Test = require('@models/test')
 const User = require('@models/user')
-const auth = require('@root/auth')
+const auth = require('@root/auth').auth
+const config = require('@root/config')
+const log = config.loggers.dev()
 let router = require('express').Router()
 
 // Get all tests for current user

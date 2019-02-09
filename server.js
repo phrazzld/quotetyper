@@ -3,20 +3,26 @@
 require('module-alias/register')
 const express = require('express')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
 const app = express()
 const port = process.env.port || 8080
 const mongoose = require('mongoose')
 const config = require('@root/config')
 const routes = require('@routes/index')
+const auth = require('./auth')
+const log = config.loggers.dev()
 
 // Pull database configuration and connect to the database
 mongoose.connect(config.mongoUrl, { server: { reconnectTries: Number.MAX_VALUE } })
 mongoose.connection
   .once('open', () => {
-    console.log('Mongoose successfully connected to Mongo')
+    log.info('Mongoose successfully connected to Mongo')
   })
   .on('error', (err) => {
-    console.error('Mongoose failed to connect to Mongo --', err)
+    log.info('Mongoose failed to connect to Mongo')
+    log.fatal(err)
   })
 
 // Load models
@@ -28,8 +34,32 @@ const passportConfig = require('@root/passport')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+// Handle cookies and sessions
+app.use(cookieParser())
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'disgusting foot secret',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  cookie: {
+    secure: true,
+    maxAge: 1000 * 60 * 24
+  }
+}))
+
+// Passport authentication
+app.use(auth.initialize)
+app.use(auth.session)
+app.use(auth.setUser)
+
 // Use API routes
 app.use('/', routes)
 
-app.listen(config.port)
-console.log('Port', config.port, 'goes "whirrr..."')
+app.listen(config.port, function (err) {
+  if (err) {
+    log.info(`Server has a problem listening on port ${config.port}`)
+    log.fatal(err)
+  } else {
+    log.info(`Port ${config.port} goes "whirrr..."`)
+  }
+})

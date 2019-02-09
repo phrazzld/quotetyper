@@ -1,5 +1,6 @@
 // auth.js
 
+const passport = require('passport')
 const jwt = require('express-jwt')
 
 const getTokenFromHeaders = (req) => {
@@ -26,4 +27,12 @@ const auth = {
   })
 }
 
-module.exports = auth
+module.exports = {
+  auth: auth,
+  initialize: passport.initialize(),
+  session: passport.session(),
+  setUser: (req, res, next) => {
+    res.locals.user = req.user
+    return next()
+  },
+}
