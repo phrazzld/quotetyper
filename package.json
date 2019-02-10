@@ -4,10 +4,10 @@
   "description": "Type quotes fast",
   "main": "server.js",
   "scripts": {
-    "build": "babel server.js -d dist",
-    "start": "npm run build && nodemon dist/server.js | bunyan",
-    "serve": "node dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run clean && babel -d ./build ./src -s",
+    "start": "npm run build && nodemon ./src/server.js | bunyan",
+    "clean": "rm -rf ./build && mkdir build",
+    "heroku-postbuild": "npm install && npm run build"
   },
   "author": "Phaedrus and Nathan",
   "license": "ISC",
@@ -31,8 +31,8 @@
     "babel-preset-env": "^1.7.0"
   },
   "_moduleAliases": {
-    "@root": ".",
-    "@routes": "routes",
-    "@models": "models"
+    "@root": "src",
+    "@routes": "src/routes",
+    "@models": "src/models"
   }
 }
