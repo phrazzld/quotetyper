@@ -11,7 +11,7 @@ const port = process.env.port || 8080
 const mongoose = require('mongoose')
 const config = require('@root/config')
 const routes = require('@routes/index')
-const auth = require('./auth')
+const auth = require('@root/auth')
 const log = config.loggers.dev()
 
 // Pull database configuration and connect to the database

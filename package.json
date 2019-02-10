@@ -4,8 +4,9 @@
   "description": "Type quotes fast",
   "main": "server.js",
   "scripts": {
-    "build": "babel server.js",
-    "start": "npm run build && nodemon server.js | bunyan",
+    "build": "babel server.js -d dist",
+    "start": "npm run build && nodemon dist/server.js | bunyan",
+    "serve": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Phaedrus and Nathan",
