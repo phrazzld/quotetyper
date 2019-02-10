@@ -12,6 +12,8 @@
   "author": "Phaedrus and Nathan",
   "license": "ISC",
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "body-parser": "^1.18.3",
     "bunyan": "^1.8.12",
     "connect-mongo": "^2.0.3",
@@ -25,10 +27,6 @@
     "nodemon": "^1.18.9",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
   },
   "_moduleAliases": {
     "@root": "src",
