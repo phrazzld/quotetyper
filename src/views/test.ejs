@@ -1,54 +1,15 @@
-<html>
-  <head>
-    <title>
-      <%= title %>
-    </title>
-  </head>
-  <body>
-    <h1>QuoteTyper</h1>
-    <h2>Typing Test</h2>
-    <div id='typing-test-quote-wrapper'>
-      <h5 id='typing-test-quote'><%= quote.text %></h5>
-    </div>
-    <div id='exam-table'>
-      <form action='/test' method='POST'>
-        <textarea name='typingTestInput' id='typing-test-input' cols='30' rows='6'></textarea>
-        <input type='hidden' name='elapsedTime' id='typing-test-timer' value='0'>
-        <input type='hidden' name='quoteId' value='<%= quote.id %>'>
-        <input type='submit' value='Submit'>
-      </form>
-    </div>
-
-    <div id='nav'>
-      <ul id='sitemap'>
-        <li><a href='/'>Home</a></li>
-        <li><a href='/quotes'>Quotes</a></li>
-        <% if (isLoggedIn) { %>
-          <li><a href='/logout'>Logout</a></li>
-          <li><a href='/profile'>Profile</a></li>
-          <li><a href='/new-quote'>New Quote</a></li>
-          <li><a href='/test'>Typing Test</a></li>
-        <% } else { %>
-          <li><a href='/login'>Log In</a> or <a href='/signup'>Sign Up</a></li>
-        <% } %>
-      </ul>
-    </div>
-  <script type='text/javascript'>
-    var timer = document.getElementById('typing-test-timer')
-    var testInput = document.getElementById('typing-test-input')
-    var testStarted = false
-    testInput.addEventListener('keydown', event => {
-      if (!testStarted) {
-        testStarted = true
-        startTimer()
-      }
-    })
-    function startTimer () {
-      setInterval(tick, 10)
-    }
-    function tick() {
-      timer.value = Number(timer.value) + 1
-    }
-  </script>
-  </body>
-</html>
+<%- include('header') %>
+  <h1>QuoteTyper</h1>
+  <h2>Typing Test</h2>
+  <div id='typing-test-quote-wrapper'>
+    <h5 id='typing-test-quote'><%= quote.text %></h5>
+  </div>
+  <div id='exam-table'>
+    <form action='/test' method='POST'>
+      <input type='text' name='typingTestInput' id='typing-test-input'>
+      <input type='hidden' name='elapsedTime' id='typing-test-timer' value='0'>
+      <input type='hidden' name='quoteId' value='<%= quote.id %>'>
+      <input type='submit' value='Submit'>
+    </form>
+  </div>
+<%- include('footer') %>

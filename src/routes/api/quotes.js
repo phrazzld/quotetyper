@@ -1,6 +1,6 @@
 // routes/api/quotes.js
 
-const Quote = require('@models/quote')
+const Quote = require('@models/quote').model
 const auth = require('@root/auth').auth
 const config = require('@root/config')
 const log = config.loggers.dev()

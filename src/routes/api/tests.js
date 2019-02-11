@@ -1,7 +1,7 @@
 // routes/api/tests.js
 
-const Test = require('@models/test')
-const User = require('@models/user')
+const Test = require('@models/test').model
+const User = require('@models/user').model
 const auth = require('@root/auth').auth
 const config = require('@root/config')
 const log = config.loggers.dev()
@@ -10,7 +10,7 @@ let router = require('express').Router()
 // Get all tests for current user
 router.get('/', auth.required, (req, res) => {
   const { payload: { id: userId } } = req
-  return Test.find({ user: userId })
+  return Test.find({ user: { _id: userId } })
     .then((tests) => {
       return res.json(tests)
     })
@@ -41,17 +41,32 @@ router.post('/', auth.required, (req, res) => {
     payload: { id: userId },
     body: { wpm, accuracy, quote: quoteId }
   } = req
-  Test.create({
-    wpm: wpm,
-    accuracy: accuracy,
-    quote: quoteId,
-    user: userId
-  })
-    .then((test) => {
-      return res.json(test)
+  User.findOne({ _id: userId })
+    .then((user) => {
+      Quote.findOne({ _id: quoteId })
+        .then((quote) => {
+          Test.create({
+            wpm: wpm,
+            accuracy: accuracy,
+            quote: quoteId,
+            user: userId
+          })
+            .then((test) => {
+              return res.json(test)
+            })
+            .catch((err) => {
+              log.fatal(err)
+              res.status(500).send(err)
+            })
+        })
+        .catch((err) => {
+          log.fatal(err)
+          res.status(500).send(err)
+        })
     })
     .catch((err) => {
-      return res.status(500).send(err)
+      log.fatal(err)
+      res.status(500).send(err)
     })
 })
 

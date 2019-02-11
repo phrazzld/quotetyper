@@ -4,8 +4,9 @@ const config = require('@root/config')
 const helpers = require('@root/helpers')
 const log = config.loggers.dev()
 const router = require('express').Router()
-const Quote = require('@models/quote')
-const Test = require('@models/test')
+const Quote = require('@models/quote').model
+const Test = require('@models/test').model
+const User = require('@models/user').model
 
 router.get('/', (req, res) => {
   log.info('GET /')
@@ -42,7 +43,7 @@ router.get('/profile', (req, res) => {
   log.info('req.user')
   log.info(req.user)
   log.info(req.user.id)
-  Test.find({ user: req.user.id })
+  Test.find({ "user._id": req.user.id })
     .then((tests) => {
       res.render('profile', {
         title: 'Profile',
@@ -158,16 +159,23 @@ router.post('/test', (req, res) => {
       let totalChars = correctChars + extraChars + missingChars
       let accuracy = correctChars / totalChars
       accuracy = accuracy.toFixed(2)
-      Test.create({
-        wpm: wpm,
-        accuracy: accuracy,
-        quote: quoteId,
-        user: userId
-      })
-        .then((test) => {
-          log.info('Successfully created Test')
-          let testUrl = `/test/${test.id}`
-          res.redirect(testUrl)
+      User.findOne({ _id: userId })
+        .then((user) => {
+          Test.create({
+            wpm: wpm,
+            accuracy: accuracy,
+            quote: quote,
+            user: user
+          })
+            .then((test) => {
+              log.info('Successfully created Test')
+              let testUrl = `/test/${test.id}`
+              res.redirect(testUrl)
+            })
+            .catch((err) => {
+              log.fatal(err)
+              res.status(500).send(err)
+            })
         })
         .catch((err) => {
           log.fatal(err)

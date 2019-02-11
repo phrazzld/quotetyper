@@ -1,8 +1,8 @@
 const config = require("@root/config")
 const log = config.loggers.dev()
-const Quote = require("@models/quote")
-const User = require('@models/user')
-const Test = require('@models/test')
+const Quote = require("@models/quote").model
+const User = require('@models/user').model
+const Test = require('@models/test').model
 
 const isLoggedIn = req => {
   log.info("Calling helpers.isLoggedIn")

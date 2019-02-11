@@ -20,4 +20,7 @@ const QuoteSchema = new Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('Quote', QuoteSchema)
+module.exports = {
+  model: mongoose.model('Quote', QuoteSchema),
+  schema: QuoteSchema
+}

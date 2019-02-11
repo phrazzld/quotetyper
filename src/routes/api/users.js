@@ -1,6 +1,6 @@
 // routes/api/users.js
 
-const User = require('@models/user')
+const User = require('@models/user').model
 const passport = require('passport')
 const auth = require('@root/auth').auth
 const config = require('@root/config')

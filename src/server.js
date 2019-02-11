@@ -27,8 +27,8 @@ mongoose.connection
   })
 
 // Load models
-const User = require('@models/user')
-const Quote = require('@models/quote')
+const User = require('@models/user').model
+const Quote = require('@models/quote').model
 const passportConfig = require('@root/passport')
 
 // Handle x-www-form-urlencoded requests
