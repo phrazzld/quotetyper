@@ -6,9 +6,10 @@
   </head>
   <body>
     <h1><a href="/">QuoteTyper</a></h1>
-    <h2>
-      <%= email %>
-    </h2>
+    <h2><%= email %></h2>
+    <% tests.forEach(function(test) { %>
+    <p><a href='<%= `/test/${test.id}` %>'><%= test.id %></a></p>
+    <% }) %>
     <p><a href="/logout">Logout</a></p>
 
     <div id='nav'>

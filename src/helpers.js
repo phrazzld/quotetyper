@@ -1,6 +1,8 @@
 const config = require("@root/config")
 const log = config.loggers.dev()
 const Quote = require("@models/quote")
+const User = require('@models/user')
+const Test = require('@models/test')
 
 const isLoggedIn = req => {
   log.info("Calling helpers.isLoggedIn")
@@ -10,6 +12,31 @@ const isLoggedIn = req => {
 const getEmail = req => {
   log.info("Calling helpers.getEmail")
   return isLoggedIn(req) ? req.user.email : null
+}
+
+const resetDatabase = () => {
+  User.deleteMany({})
+    .then((result) => {
+      log.info(result)
+    })
+    .catch((err) => {
+      log.fatal(err)
+    })
+  Test.deleteMany({})
+    .then((result) => {
+      log.info(result)
+    })
+    .catch((err) => {
+      log.fatal(err)
+    })
+  Quote.deleteMany({})
+    .then((result) => {
+      log.info(result)
+      generateQuotes()
+    })
+    .catch((err) => {
+      log.fatal(err)
+    })
 }
 
 const generateQuotes = () => {
@@ -46,5 +73,6 @@ const generateQuotes = () => {
 module.exports = {
   isLoggedIn,
   getEmail,
-  generateQuotes
+  generateQuotes,
+  resetDatabase
 }

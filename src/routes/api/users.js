@@ -43,7 +43,10 @@ router.post('/', auth.optional, (req, res) => {
   finalUser.setPassword(password)
   finalUser.save()
     .then(() => {
-      res.json({ user: finalUser.toAuthJSON() })
+      //res.json({ user: finalUser.toAuthJSON() })
+      passport.authenticate('local')(req, res, function () {
+        res.redirect('/')
+      })
     })
     .catch((err) => {
       res.status(500).send(err)
@@ -52,8 +55,7 @@ router.post('/', auth.optional, (req, res) => {
 
 // Login
 router.post('/login', passport.authenticate('local', {
-  failureRedirect: '/login',
-  failureFlash: 'Invalid username or password'
+  failureRedirect: '/login'
 }), (req, res) => {
   log.info(`POST to /api/users/login`)
   log.info(req.body)

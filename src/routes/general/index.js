@@ -39,11 +39,22 @@ router.get('/logout', (req, res) => {
 
 router.get('/profile', (req, res) => {
   log.info('GET /profile')
-  res.render('profile', {
-    title: 'Profile',
-    email: helpers.getEmail(req),
-    isLoggedIn: helpers.isLoggedIn(req)
-  })
+  log.info('req.user')
+  log.info(req.user)
+  log.info(req.user.id)
+  Test.find({ user: req.user.id })
+    .then((tests) => {
+      res.render('profile', {
+        title: 'Profile',
+        email: helpers.getEmail(req),
+        isLoggedIn: helpers.isLoggedIn(req),
+        tests: tests
+      })
+    })
+    .catch((err) => {
+      log.fatal(err)
+      res.status(500).send(err)
+    })
 })
 
 router.get('/new-quote', (req, res) => {
@@ -199,6 +210,11 @@ router.get('/reset-quotes', (req, res) => {
       log.fatal(err)
       res.status(500).send(err)
     })
+})
+
+router.get('/reset-database', (req, res) => {
+  helpers.resetDatabase()
+  res.redirect('/')
 })
 
 module.exports = router
