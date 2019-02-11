@@ -5,6 +5,7 @@ const helpers = require('@root/helpers')
 const log = config.loggers.dev()
 const router = require('express').Router()
 const Quote = require('@models/quote')
+const Test = require('@models/test')
 
 router.get('/', (req, res) => {
   log.info('GET /')
@@ -94,10 +95,97 @@ router.get('/quotes', (req, res) => {
 
 router.get('/test', (req, res) => {
   log.info('GET /test')
-  res.render('test', {
-    title: 'Typing Test',
-    isLoggedIn: helpers.isLoggedIn(req)
+  Quote.count().exec((err, count) => {
+    let random = Math.floor(Math.random() * count)
+    Quote.findOne().skip(random).exec((err, quote) => {
+      if (err) {
+        log.fatal(err)
+        res.status(500).send(err)
+      } else {
+        res.render('test', {
+          title: 'Typing Test',
+          isLoggedIn: helpers.isLoggedIn(req),
+          quote: quote
+        })
+      }
+    })
   })
+})
+
+router.post('/test', (req, res) => {
+  log.info('POST /test')
+  const { body: {
+    typingTestInput,
+    elapsedTime,
+    quoteId
+  }, user: { id: userId }} = req
+  // Fetch quote, calculate wpm and accuracy
+  Quote.findOne({ _id: quoteId })
+    .then((quote) => {
+      let mins = Number(elapsedTime) / 60
+      mins = mins.toFixed(2)
+      let wpm = quote.text.length / 5 / mins
+      wpm = wpm.toFixed(2)
+      let workingQuote = quote.text
+      let workingTestInput = typingTestInput
+      let extraChars = 0
+      for (let i = 0; i < typingTestInput.length; i++) {
+        let found = false
+        for (let j = 0; j < workingQuote.length; j++) {
+          if (typingTestInput[i] === workingQuote[j]) {
+            workingQuote = workingQuote.substr(0, j) + workingQuote.substr(j+1, workingQuote.length)
+            found = true
+            break
+          }
+        }
+        if (!found) {
+          extraChars += 1
+        }
+      }
+      let missingChars = workingQuote.length
+      let correctChars = quote.text.length - missingChars
+      let totalChars = correctChars + extraChars + missingChars
+      let accuracy = correctChars / totalChars
+      accuracy = accuracy.toFixed(2)
+      Test.create({
+        wpm: wpm,
+        accuracy: accuracy,
+        quote: quoteId,
+        user: userId
+      })
+        .then((test) => {
+          log.info('Successfully created Test')
+          let testUrl = `/test/${test.id}`
+          res.redirect(testUrl)
+        })
+        .catch((err) => {
+          log.fatal(err)
+          res.status(500).send(err)
+        })
+    })
+    .catch((err) => {
+      log.fatal(err)
+      res.status(500).send(err)
+    })
+})
+
+router.get('/test/:testId', (req, res) => {
+  log.info(`GET /test/${req.params.testId}`)
+  Test.findOne({ _id: req.params.testId })
+    .then((test) => {
+      res.render('test-results', {
+        title: 'Test Results',
+        quote: test.quote,
+        user: test.user,
+        wpm: test.wpm,
+        accuracy: test.accuracy,
+        isLoggedIn: helpers.isLoggedIn(req)
+      })
+    })
+    .catch((err) => {
+      log.fatal(err)
+      res.status(500).send(err)
+    })
 })
 
 module.exports = router
