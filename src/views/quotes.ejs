@@ -9,6 +9,8 @@
     <h2>Quotes</h2>
     <% quotes.forEach(function(quote) { %>
     <p><%= quote.text %></p>
+    <p>-- <%= quote.author %></p>
+    <br>
     <% }) %>
     <div id='nav'>
       <ul id='sitemap'>

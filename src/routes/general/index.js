@@ -122,7 +122,7 @@ router.post('/test', (req, res) => {
   // Fetch quote, calculate wpm and accuracy
   Quote.findOne({ _id: quoteId })
     .then((quote) => {
-      let mins = Number(elapsedTime) / 60
+      let mins = Number(elapsedTime) / 60 / 100
       mins = mins.toFixed(2)
       let wpm = quote.text.length / 5 / mins
       wpm = wpm.toFixed(2)
@@ -173,14 +173,27 @@ router.get('/test/:testId', (req, res) => {
   log.info(`GET /test/${req.params.testId}`)
   Test.findOne({ _id: req.params.testId })
     .then((test) => {
+      let displayAccuracy = `${test.accuracy * 100} %`
       res.render('test-results', {
         title: 'Test Results',
         quote: test.quote,
         user: test.user,
         wpm: test.wpm,
-        accuracy: test.accuracy,
+        accuracy: displayAccuracy,
         isLoggedIn: helpers.isLoggedIn(req)
       })
+    })
+    .catch((err) => {
+      log.fatal(err)
+      res.status(500).send(err)
+    })
+})
+
+router.get('/reset-quotes', (req, res) => {
+  Quote.remove()
+    .then((result) => {
+      helpers.generateQuotes()
+      res.redirect('/quotes')
     })
     .catch((err) => {
       log.fatal(err)
