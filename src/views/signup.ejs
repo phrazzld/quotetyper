@@ -1,0 +1,36 @@
+<!-- routes/general/signup.html -->
+<!doctype html>
+<html>
+  <head>
+    <title>
+      <%= title %>
+    </title>
+  </head>
+  <body>
+    <h1><a href='/'>QuoteTyper</a></h1>
+    <h2>Sign Up</h2>
+    <form action='/api/users' method='POST'>
+      Email: <input type='text' name='email'><br>
+      Password: <input type='password' name='password'><br>
+      Password (confirm): <input type='password' name='password-confirmation'><br>
+      <input type='submit' value='Sign Up'>
+    </form>
+    <p>Already have an account? <a href='/login'>Log in</a></p>
+
+    <div id='nav'>
+      <ul id='sitemap'>
+        <li><a href='/'>Home</a></li>
+        <li><a href='/quotes'>Quotes</a></li>
+        <% if (isLoggedIn) { %>
+          <li><a href='/logout'>Logout</a></li>
+          <li><a href='/profile'>Profile</a></li>
+          <li><a href='/new-quote'>New Quote</a></li>
+          <li><a href='/test'>Typing Test</a></li>
+        <% } else { %>
+          <li><a href='/login'>Log In</a> or <a href='/signup'>Sign Up</a></li>
+        <% } %>
+      </ul>
+    </div>
+
+  </body>
+</html>

@@ -18,7 +18,7 @@ router.post('/', auth.required, (req, res) => {
   Quote.create({
     text: req.body.text,
     author: req.body.author,
-    source: req.body.source
+    submittedBy: req.user.id
   }, (err, result) => {
     if (err) {
       log.info('Error saving Quote record')

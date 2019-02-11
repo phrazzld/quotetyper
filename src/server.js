@@ -5,6 +5,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const path = require('path')
 const MongoStore = require('connect-mongo')(session)
 const app = express()
 const port = process.env.port || 8080
@@ -51,6 +52,11 @@ app.use(session({
 app.use(auth.initialize)
 app.use(auth.session)
 app.use(auth.setUser)
+
+// Tell Express where to find template files
+app.set('views', path.join(__dirname, 'views'))
+// Use EJS as our templating engine
+app.set('view engine', 'ejs')
 
 // Use API routes
 app.use('/', routes)

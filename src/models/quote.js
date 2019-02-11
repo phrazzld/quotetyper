@@ -12,9 +12,9 @@ const QuoteSchema = new Schema({
     type: String,
     required: true
   },
-  source: {
-    type: String,
-    required: true
+  submittedBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, {
   timestamps: true

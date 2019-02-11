@@ -57,42 +57,8 @@ router.post('/login', passport.authenticate('local', {
 }), (req, res) => {
   log.info(`POST to /api/users/login`)
   log.info(req.body)
-  return res.redirect('/')
+  return res.redirect('/profile')
 })
-  /*
-  , (req, res) => {
-  log.info(body)
-  const { body: { email, password } } = req
-  if (!email) {
-    return res.status(422).json({
-      errors: {
-        email: 'is required'
-      }
-    })
-  }
-  if (!password) {
-    return res.status(422).json({
-      errors: {
-        password: 'is required'
-      }
-    })
-  }
-  return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
-    if (err) {
-      log.info('Error authenticating')
-      log.fatal(err)
-      return res.status(500).send('Error authenticating')
-    } else {
-      if (passportUser) {
-        const user = passportUser
-        user.token = passportUser.generateJWT()
-        return res.json({ user: user.toAuthJSON() })
-      }
-      return res.status(400).info
-    }
-  })(req, res)
-})
-*/
 
 // Get current user
 router.get('/current', auth.required, (req, res) => {
