@@ -1,4 +1,5 @@
 const config = require("@root/config")
+const levenshtein = require('fast-levenshtein')
 const log = config.loggers.dev()
 const Quote = require("@models/quote").model
 const User = require('@models/user').model
@@ -12,6 +13,22 @@ const isLoggedIn = req => {
 const getEmail = req => {
   log.info("Calling helpers.getEmail")
   return isLoggedIn(req) ? req.user.email : null
+}
+
+const calculateAccuracy = (duration, quoteText, submission) => {
+  let distance = levenshtein.get(quoteText, submission)
+  let denom = quoteText.length + distance
+  let accuracy = quoteText.length / denom
+  log.info(`distance: ${distance}\ndenom: ${denom}\naccuracy: ${accuracy}`)
+  return accuracy.toFixed(2)
+}
+
+const calculateWPM = (duration, quoteText) => {
+  let minutes = Number(duration) / 60 / 10
+  minutes = minutes.toFixed(2)
+  let wpm = quoteText.length / config.avgWordLength / minutes
+  wpm = wpm.toFixed(2)
+  return wpm
 }
 
 const resetDatabase = () => {
@@ -74,5 +91,7 @@ module.exports = {
   isLoggedIn,
   getEmail,
   generateQuotes,
-  resetDatabase
+  resetDatabase,
+  calculateAccuracy,
+  calculateWPM
 }

@@ -134,31 +134,8 @@ router.post('/test', (req, res) => {
   // Fetch quote, calculate wpm and accuracy
   Quote.findOne({ _id: quoteId })
     .then((quote) => {
-      let mins = Number(elapsedTime) / 60 / 100
-      mins = mins.toFixed(2)
-      let wpm = quote.text.length / 5 / mins
-      wpm = wpm.toFixed(2)
-      let workingQuote = quote.text
-      let workingTestInput = typingTestInput
-      let extraChars = 0
-      for (let i = 0; i < typingTestInput.length; i++) {
-        let found = false
-        for (let j = 0; j < workingQuote.length; j++) {
-          if (typingTestInput[i] === workingQuote[j]) {
-            workingQuote = workingQuote.substr(0, j) + workingQuote.substr(j+1, workingQuote.length)
-            found = true
-            break
-          }
-        }
-        if (!found) {
-          extraChars += 1
-        }
-      }
-      let missingChars = workingQuote.length
-      let correctChars = quote.text.length - missingChars
-      let totalChars = correctChars + extraChars + missingChars
-      let accuracy = correctChars / totalChars
-      accuracy = accuracy.toFixed(2)
+      let wpm = helpers.calculateWPM(elapsedTime, quote.text)
+      let accuracy = helpers.calculateAccuracy(elapsedTime, quote.text, typingTestInput)
       User.findOne({ _id: userId })
         .then((user) => {
           Test.create({

@@ -1,4 +1,5 @@
 <%- include('header') %>
+
   <h1>QuoteTyper</h1>
   <h2>Typing Test</h2>
   <div id='typing-test-quote-wrapper'>
@@ -12,4 +13,23 @@
       <input type='submit' value='Submit'>
     </form>
   </div>
+
+  <script type='text/javascript'>
+    var timer = document.getElementById('typing-test-timer')
+    var testInput = document.getElementById('typing-test-input')
+    var testStarted = false
+    testInput.addEventListener('keydown', event => {
+      if (!testStarted) {
+        testStarted = true
+        startTimer()
+      }
+    })
+    function startTimer () {
+      setInterval(tick, 100)
+    }
+    function tick() {
+      timer.value = Number(timer.value) + 1
+    }
+  </script>
+
 <%- include('footer') %>
