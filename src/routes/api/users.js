@@ -58,8 +58,16 @@ router.post('/login', passport.authenticate('local', {
   failureRedirect: '/login'
 }), (req, res) => {
   log.info(`POST to /api/users/login`)
-  log.info(req.body)
-  return res.redirect('/profile')
+  log.info('req.user')
+  log.info(req.user)
+  req.logIn(req.user, err => {
+    if (err) {
+      log.fatal(err)
+      res.redirect('/login')
+    } else {
+      res.redirect('/profile')
+    }
+  })
 })
 
 // Get current user

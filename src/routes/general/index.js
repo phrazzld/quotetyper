@@ -7,6 +7,7 @@ const router = require('express').Router()
 const Quote = require('@models/quote').model
 const Test = require('@models/test').model
 const User = require('@models/user').model
+const passport = require('passport')
 
 router.get('/', (req, res) => {
   log.info('GET /')
@@ -42,8 +43,8 @@ router.get('/profile', (req, res) => {
   log.info('GET /profile')
   log.info('req.user')
   log.info(req.user)
-  log.info(req.user.id)
-  Test.find({ "user._id": req.user.id })
+  log.info(req.user._id)
+  Test.find({ "user._id": req.user._id })
     .then((tests) => {
       res.render('profile', {
         title: 'Profile',

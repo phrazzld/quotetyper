@@ -21,7 +21,7 @@ mongoose.connection
   .once('open', () => {
     log.info('Mongoose successfully connected to Mongo')
   })
-  .on('error', (err) => {
+  .on('error', err => {
     log.info('Mongoose failed to connect to Mongo')
     log.fatal(err)
   })
@@ -41,11 +41,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'disgusting foot secret',
   resave: true,
   saveUninitialized: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  store: new MongoStore({ mongooseConnection: mongoose.connection })/*,
   cookie: {
     secure: true,
-    maxAge: 1000 * 60 * 24
+    maxAge: 1000 * 60 * 60 * 24
   }
+  */
 }))
 
 // Passport authentication
