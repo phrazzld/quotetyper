@@ -6,12 +6,10 @@ const User = require('@models/user').model
 const Test = require('@models/test').model
 
 const isLoggedIn = req => {
-  log.info("Calling helpers.isLoggedIn")
-  return req.user == null ? false : true
+  return req.user != null
 }
 
 const getEmail = req => {
-  log.info("Calling helpers.getEmail")
   return isLoggedIn(req) ? req.user.email : null
 }
 

@@ -1,5 +1,6 @@
 // passport.js
 
+const log = require('@root/config').loggers.dev()
 const mongoose = require('mongoose')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -29,10 +30,16 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser(async (id, done) => {
+  log.info('passport.deserializeUser')
+  log.info(`id: ${id}`)
   try {
     const user = await User.findById(id).exec()
+    log.info('user')
+    log.info(user)
     return done(null, user)
   } catch (err) {
+    log.info('err')
+    log.info(err)
     return done(err)
   }
 })
