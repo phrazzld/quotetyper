@@ -1,7 +1,7 @@
 {
   "name": "quotetyper",
   "version": "1.0.0",
-  "description": "Type real fast",
+  "description": "Type quotes fast",
   "main": "server.js",
   "scripts": {
     "build": "npm run clean && babel -d ./build ./src -s",

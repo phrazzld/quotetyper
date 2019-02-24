@@ -9,23 +9,21 @@ const session = require('express-session')
 const path = require('path')
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(session)
-const config = require('@root/config')
 const routes = require('@routes/index')
 const auth = require('@root/auth')
 
 app.use(helmet())
 app.use(helmet.contentSecurityPolicy({
   directives: {
-    defaultSrc: ["'self'"]
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'"]
   }
 }))
 app.use(helmet.permittedCrossDomainPolicies())
 app.use(helmet.featurePolicy({
   features: {
-    vibrate: ["'none'"],
     payment: ["'none'"],
     syncXhr: ["'none'"],
-    notifications: ["'none'"],
     microphone: ["'none'"],
     camera: ["'none'"],
     geolocation: ["'none'"]

@@ -1,9 +1,12 @@
     <div id='nav'>
       <ul id='sitemap'>
         <li><a href='/'>Home</a></li>
+        <li><a href='/quotes'>Quotes</a></li>
         <% if (isLoggedIn) { %>
           <li><a href='/logout'>Logout</a></li>
           <li><a href='/profile'>Profile</a></li>
+          <li><a href='/quotes/new'>New Quote</a></li>
+          <li><a href='/typingtest'>Typing Test</a></li>
         <% } else { %>
           <li><a href='/login'>Log In</a></li>
           <li><a href='/signup'>Sign Up</a></li>

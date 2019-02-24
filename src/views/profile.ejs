@@ -1,3 +1,7 @@
 <%- include('header') %>
   <h2><%= email %></h2>
+  <% testResults.forEach(function(result) { %>
+    <p><a href='<%= `/testresults/${result._id}` %>'><%= result._id %></a></p>
+  <% }) %>
+  <p><a href='/profile/edit'>Edit Profile</a></p>
 <%- include('footer') %>

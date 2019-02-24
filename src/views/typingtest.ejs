@@ -7,7 +7,7 @@
   <div id='exam-table'>
     <form action='/typingtest' method='POST'>
       <input type='text' name='submission' id='submission'>
-      <input type='hidden' name='elapsedTime' id='typing-test-timer' value='0'>
+      <input type='hidden' name='elapsedTime' id='typing-test-timer'>
       <input type='hidden' name='quoteId' value='<%= quote.id %>'>
       <input type='submit' value='Submit'>
     </form>
@@ -27,7 +27,11 @@
       setInterval(tick, 100)
     }
     function tick() {
-      timer.value = Number(timer.value) + 1
+      if (!timer.value) {
+        timer.value = 0
+      } else {
+        timer.value = Number(timer.value) + 1
+      }
     }
   </script>
 
