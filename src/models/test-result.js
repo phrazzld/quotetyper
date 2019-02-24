@@ -1,4 +1,4 @@
-// src/models/testresult.js
+// src/models/test-result.js
 
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema

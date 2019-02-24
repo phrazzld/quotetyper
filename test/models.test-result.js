@@ -3,7 +3,7 @@
 require('module-alias/register')
 const should = require('chai').should()
 const expect = require('chai').expect
-const TestResult = require('@models/testresult').model
+const TestResult = require('@models/test-result').model
 const User = require('@models/user').model
 const Quote = require('@models/quote').model
 const log = require('@root/config').loggers.test()

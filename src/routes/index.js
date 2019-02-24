@@ -6,7 +6,7 @@ const passport = require('passport')
 const helpers = require('@root/helpers')
 const User = require('@models/user').model
 const Quote = require('@models/quote').model
-const TestResult = require('@models/testresult').model
+const TestResult = require('@models/test-result').model
 
 router.get('/', (req, res) => {
   log.info('GET /')
@@ -65,13 +65,13 @@ router.post('/signup', async (req, res) => {
   }
 })
 
-router.get('/logout', helpers.isAuthenticated, (req, res) => {
+router.get('/logout', helpers.forceAuth, (req, res) => {
   log.info('GET /logout')
   req.logout()
   res.redirect('/')
 })
 
-router.get('/profile', helpers.isAuthenticated, async (req, res) => {
+router.get('/profile', helpers.forceAuth, async (req, res) => {
   log.info('GET /profile')
   const testResults = await TestResult.find({ userId: helpers.getUserId(req) })
   res.render('profile', {
@@ -82,7 +82,7 @@ router.get('/profile', helpers.isAuthenticated, async (req, res) => {
   })
 })
 
-router.get('/profile/edit', helpers.isAuthenticated, (req, res) => {
+router.get('/profile/edit', helpers.forceAuth, (req, res) => {
   res.render('edit-profile', {
     title: 'Edit Profile',
     email: helpers.getUserEmail(req),
@@ -90,7 +90,7 @@ router.get('/profile/edit', helpers.isAuthenticated, (req, res) => {
   })
 })
 
-router.post('/profile/edit', helpers.isAuthenticated, async (req, res) => {
+router.post('/profile/edit', helpers.forceAuth, async (req, res) => {
   const { body: {
     email,
     password,
@@ -112,7 +112,7 @@ router.post('/profile/edit', helpers.isAuthenticated, async (req, res) => {
   }
 })
 
-router.post('/profile/delete', helpers.isAuthenticated, async (req, res) => {
+router.post('/profile/delete', helpers.forceAuth, async (req, res) => {
   try {
     await User.deleteOne({ _id: helpers.getUserId(req) })
     res.redirect('/')
@@ -136,14 +136,14 @@ router.get('/quotes', async (req, res) => {
   }
 })
 
-router.get('/quotes/new', helpers.isAuthenticated, (req, res) => {
+router.get('/quotes/new', helpers.forceAuth, (req, res) => {
   res.render('new-quote', {
     title: 'New Quote',
     isLoggedIn: helpers.isLoggedIn(req)
   })
 })
 
-router.post('/quotes/new', helpers.isAuthenticated, async (req, res) => {
+router.post('/quotes/new', helpers.forceAuth, async (req, res) => {
   const { body: {
     'new-quote-text': quoteText,
     'new-quote-author': quoteAuthor
@@ -161,12 +161,12 @@ router.post('/quotes/new', helpers.isAuthenticated, async (req, res) => {
   }
 })
 
-router.get('/typingtest', async (req, res) => {
+router.get('/typing-test', async (req, res) => {
   try {
     const quoteCount = await Quote.count()
     const random = Math.floor(Math.random() * quoteCount)
     const quote = await Quote.findOne({}).skip(random)
-    res.render('typingtest', {
+    res.render('typing-test', {
       title: 'Typing Test',
       quote: quote,
       isLoggedIn: helpers.isLoggedIn(req)
@@ -177,7 +177,7 @@ router.get('/typingtest', async (req, res) => {
   }
 })
 
-router.post('/typingtest', helpers.isAuthenticated, async (req, res) => {
+router.post('/typing-test', helpers.forceAuth, async (req, res) => {
   const { body: { submission, elapsedTime, quoteId } } = req
   log.info(`submission: ${submission}\nelapsedTime: ${elapsedTime}\nquoteId: ${quoteId}`)
   try {
@@ -190,14 +190,14 @@ router.post('/typingtest', helpers.isAuthenticated, async (req, res) => {
       quote,
       userId: helpers.getUserId(req)
     })
-    res.redirect(`/testresults/${testResult._id}`)
+    res.redirect(`/test-results/${testResult._id}`)
   } catch (err) {
     log.fatal(err)
     res.status(500).send(err)
   }
 })
 
-router.get('/testresults/:testResultId', helpers.isAuthenticated, async (req, res) => {
+router.get('/test-results/:testResultId', helpers.forceAuth, async (req, res) => {
   const testResult = await TestResult.findOne({ _id: req.params.testResultId })
   const displayAccuracy = `${testResult.accuracy * 100} %`
   res.render('test-results', {

@@ -9,6 +9,10 @@ const log = require('@root/config').loggers.test()
 const pass = 'passw0rd'
 
 describe('User model', function () {
+  beforeEach(async function () {
+    await User.remove({})
+  })
+
   describe('saving new documents', function () {
     it('should fail if setPassword has not been called', function (done) {
       const bob = new User({ email: 'bob@gmail.com' })

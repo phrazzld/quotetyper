@@ -1,4 +1,4 @@
-// src/quoteBank.js
+// src/quote-bank.js
 
 const quoteBank = [
   {
