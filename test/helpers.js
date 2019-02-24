@@ -1,4 +1,4 @@
-// test/helpersTest.js
+// test/helpers.js
 
 require('module-alias/register')
 const helpers = require('@root/helpers')
@@ -74,4 +74,26 @@ describe('forceAuth', function () {
     expect(result.status).to.equal(401)
     expect(result.redirectedTo).to.equal('/login')
   })
+})
+
+describe('calculateAccuracy', function () {
+  it('should return 1.0000 when quoteText and submission are the same')
+
+  it('should return 0.0000 when submission is empty')
+})
+
+describe('calculateWPM', function () {
+  it('should return 100 when duration is 600 and submission.length is 100')
+
+  it('should return 60 when duration is 300 and submission.length is 30')
+})
+
+describe('newQuote', function () {
+  it('should create a new Quote document if the db contains no duplicate')
+
+  it('should not create a new Quote document if the db contains a duplicate')
+})
+
+describe('generateQuotes', function () {
+  it('should populate the quote db with some personal favorites')
 })

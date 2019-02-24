@@ -10,6 +10,6 @@ module.exports = {
     prod: () => bunyan.createLogger({ name: 'prod', level: 'info' }),
     test: () => bunyan.createLogger({ name: 'test', level: 'fatal' })
   },
-  isProd: process.env.NODE_ENV || false,
+  isProd: process.env.NODE_ENV === 'production' || false,
   avgWordLength: 5
 }

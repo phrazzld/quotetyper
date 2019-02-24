@@ -42,7 +42,8 @@
   "_moduleAliases": {
     "@root": "src",
     "@routes": "src/routes",
-    "@models": "src/models"
+    "@models": "src/models",
+    "@test": "test"
   },
   "standard": {
     "ignore": [

@@ -1,4 +1,4 @@
-// test/test.js
+// test/models.user.js
 
 require('module-alias/register')
 const should = require('chai').should()

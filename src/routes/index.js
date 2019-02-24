@@ -149,11 +149,7 @@ router.post('/quotes/new', helpers.forceAuth, async (req, res) => {
     'new-quote-author': quoteAuthor
   } } = req
   try {
-    await Quote.create({
-      text: quoteText,
-      author: quoteAuthor,
-      submittedBy: helpers.getUserId(req)
-    })
+    await helpers.newQuote(quoteText, quoteAuthor, helpers.getUserId(req))
     res.redirect('/quotes')
   } catch (err) {
     log.fatal(err)
@@ -177,13 +173,12 @@ router.get('/typing-test', async (req, res) => {
   }
 })
 
-router.post('/typing-test', helpers.forceAuth, async (req, res) => {
+router.post('/test-results', helpers.forceAuth, async (req, res) => {
   const { body: { submission, elapsedTime, quoteId } } = req
-  log.info(`submission: ${submission}\nelapsedTime: ${elapsedTime}\nquoteId: ${quoteId}`)
   try {
     const quote = await Quote.findOne({ _id: quoteId })
     const wpm = helpers.calculateWPM(elapsedTime, submission)
-    const accuracy = helpers.calculateAccuracy(elapsedTime, quote.text, submission)
+    const accuracy = helpers.calculateAccuracy(quote.text, submission)
     const testResult = await TestResult.create({
       wpm,
       accuracy,
