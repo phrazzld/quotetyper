@@ -1,0 +1,8 @@
+<%- include('header') %>
+  <h2>Quotes</h2>
+  <% quotes.forEach(function (quote) { %>
+    <p><%= quote.text %></p>
+    <p>-- <%= quote.author %></p>
+    <br>
+  <% }) %>
+<%- include('footer') %>

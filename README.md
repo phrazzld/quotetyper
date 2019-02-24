@@ -1,15 +1,6 @@
-# Express Boilerplate
+# QuoteTyper
 
-## Everything you need to start your next Express app
-
-- EJS view engine
-- MongoDB database
-- Mongoose ORM
-- Passport.js local strategy for authentication
-- Tests with Mocha and Chai
-- Linting with Standard
-- ... and so much more!
-
+## Type real fast!
 
 ### License
 [MIT](https://opensource.org/licenses/MIT)

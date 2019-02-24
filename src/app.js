@@ -10,7 +10,6 @@ const path = require('path')
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(session)
 const config = require('@root/config')
-const log = config.loggers.dev()
 const routes = require('@routes/index')
 const auth = require('@root/auth')
 

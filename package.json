@@ -1,7 +1,7 @@
 {
-  "name": "express-boilerplate",
+  "name": "quotetyper",
   "version": "1.0.0",
-  "description": "All the basics for your next Express project.",
+  "description": "Type real fast",
   "main": "server.js",
   "scripts": {
     "build": "npm run clean && babel -d ./build ./src -s",
@@ -10,7 +10,7 @@
     "heroku-postbuild": "npm install && npm run build",
     "test": "mocha"
   },
-  "author": "Phaedrus Raznikov",
+  "author": "Phaedrus and Nathan",
   "license": "ISC",
   "dependencies": {
     "babel-cli": "^6.26.0",

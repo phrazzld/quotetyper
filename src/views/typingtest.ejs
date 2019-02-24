@@ -1,0 +1,34 @@
+<%- include('header') %>
+
+  <h2>Typing Test</h2>
+  <div id='typing-test-quote-wrapper'>
+    <h5 id='typing-test-quote'><%= quote.text %></h5>
+  </div>
+  <div id='exam-table'>
+    <form action='/typingtest' method='POST'>
+      <input type='text' name='submission' id='submission'>
+      <input type='hidden' name='elapsedTime' id='typing-test-timer' value='0'>
+      <input type='hidden' name='quoteId' value='<%= quote.id %>'>
+      <input type='submit' value='Submit'>
+    </form>
+  </div>
+
+  <script type='text/javascript'>
+    var timer = document.getElementById('typing-test-timer')
+    var testInput = document.getElementById('submission')
+    var testStarted = false
+    testInput.addEventListener('keydown', event => {
+      if (!testStarted) {
+        testStarted = true
+        startTimer()
+      }
+    })
+    function startTimer () {
+      setInterval(tick, 100)
+    }
+    function tick() {
+      timer.value = Number(timer.value) + 1
+    }
+  </script>
+
+<%- include('footer') %>
