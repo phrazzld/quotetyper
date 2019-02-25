@@ -21,7 +21,7 @@ const forceAuth = (req, res, next) => {
   if (req.user != null) {
     return next()
   }
-  return res.status(401).redirect('/login')
+  return res.status(401).redirect('/401')
 }
 
 const calculateAccuracy = (quoteText, submission) => {

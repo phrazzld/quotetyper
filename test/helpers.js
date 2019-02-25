@@ -72,7 +72,7 @@ describe('forceAuth', function () {
   it('should return a redirect to login when user is not logged in', function () {
     let result = helpers.forceAuth(anonymousRequest, res, next)
     expect(result.status).to.equal(401)
-    expect(result.redirectedTo).to.equal('/login')
+    expect(result.redirectedTo).to.equal('/401')
   })
 })
 
