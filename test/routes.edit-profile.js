@@ -8,44 +8,83 @@ const proctor = require('@test/proctor')
 const User = require('@models/user').model
 const expect = require('chai').expect
 
-const userCreds = { email: 'been@here.com', password: 'passw0rd' }
+const userCreds = { email: 'temp@user.com', password: 'temp' }
 const authenticatedUser = request.agent(app)
 
 describe('/profile/edit', function () {
-  // Setup test environment with an authenticated user account
+  // Set up authenticated user
   before(async function () {
     const user = new User({ email: userCreds.email })
     await user.setPassword(userCreds.password)
     await user.save()
-    await authenticatedUser
-      .post('/login')
-      .send(userCreds)
-      .end(function (err, res) {
-        proctor.check(err)
-        expect(res.statusCode).to.equal(302)
-        expect(res.text).to.equal('Found. Redirecting to /profile')
-      })
+    await authenticatedUser.post('/login').send(userCreds)
   })
 
-  // Tests
   describe('GET', function () {
-    it('should 302 to /login if requested by an unauthenticated user')
-
-    it('should 200 if requested by authenticated user')
+    describe('Unauthenticated', function () {
+      it('should 302 to /401', function (done) {
+        request(app)
+          .get('/profile/edit')
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(302)
+            expect(res.text).to.equal('Found. Redirecting to /401')
+            done()
+          })
+      })
+    })
+    describe('Authenticated', function () {
+      it('should 200', function (done) {
+        authenticatedUser
+          .get('/profile/edit')
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(200)
+            done()
+          })
+      })
+    })
   })
-
   describe('POST', function () {
-    it('should 302 to /login if requested by an unauthenticated user')
-
-    it('should 302 to /profile if requested by authenticated user')
-
-    it('should save edits to email')
-
-    it('should save new password if it matches password-confirmation')
+    describe('Unauthenticated', function () {
+      it('should 302 to /401', function (done) {
+        request(app)
+          .post('/profile/edit')
+          .send({
+            email: userCreds.email,
+            password: userCreds.password,
+            'password-confirmation': userCreds.password
+          })
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(302)
+            expect(res.text).to.equal('Found. Redirecting to /401')
+            done()
+          })
+      })
+    })
+    describe('Authenticated', function () {
+      it('should 302 to /profile', function (done) {
+        authenticatedUser
+          .post('/profile/edit')
+          .send({
+            email: userCreds.email,
+            password: userCreds.password,
+            'password-confirmation': userCreds.password
+          })
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(302)
+            expect(res.text).to.equal('Found. Redirecting to /profile')
+            done()
+          })
+      })
+    })
   })
 
   // Cleanup
   after(async function () {
-    await User.remove({})
+    await User.remove({ email: userCreds.email })
+    await authenticatedUser.get('/logout')
   })
 })

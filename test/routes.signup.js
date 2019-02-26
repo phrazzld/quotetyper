@@ -11,20 +11,136 @@ const userCreds = { email: 'been@here.com', password: 'passw0rd' }
 const authenticatedUser = request.agent(app)
 
 describe('/signup', function () {
+  // Set up authenticated user
+  before(async function () {
+    const user = new User({ email: userCreds.email })
+    await user.setPassword(userCreds.password)
+    await user.save()
+    await authenticatedUser.post('/login').send(userCreds)
+  })
+
   describe('GET', function () {
     describe('Authenticated', function () {
-      it('should 302 to /profile')
+      it('should 302 to /profile', function (done) {
+        authenticatedUser
+          .get('/signup')
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(302)
+            expect(res.text).to.equal('Found. Redirecting to /profile')
+            done()
+          })
+      })
     })
     describe('Unauthenticated', function () {
-      it('should 200')
+      it('should 200', function (done) {
+        request(app)
+          .get('/signup')
+          .expect(200, done)
+      })
     })
   })
   describe('POST', function () {
     describe('Authenticated', function () {
-      it('should 302 to /profile')
+      it('should 302 to /500', function (done) {
+        authenticatedUser
+          .post('/signup')
+          .send({
+            email: userCreds.email,
+            password: userCreds.password,
+            'password-confirmation': userCreds.password
+          })
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(302)
+            expect(res.text).to.equal('Found. Redirecting to /500')
+            done()
+          })
+      })
     })
     describe('Unauthenticated', function () {
-      it('should 302 to /profile')
+      const signupCreds = {
+        email: 'howdy@partner.com',
+        password: 'yeehaw',
+        'password-confirmation': 'yeehaw'
+      }
+      it('should 422 when sent an empty email field', function (done) {
+        request(app)
+          .post('/signup')
+          .send({
+            password: signupCreds.password,
+            'password-confirmation': signupCreds.password
+          })
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(422)
+            const msg = JSON.parse(res.text).message
+            expect(msg).to.equal('Invalid email or password')
+            done()
+          })
+      })
+      it('should 422 when sent an empty password field', function (done) {
+        request(app)
+          .post('/signup')
+          .send({ email: signupCreds.email })
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(422)
+            const msg = JSON.parse(res.text).message
+            expect(msg).to.equal('Invalid email or password')
+            done()
+          })
+      })
+      it('should 422 when password and confirmation do not match', function (done) {
+        request(app)
+          .post('/signup')
+          .send({
+            email: signupCreds.email,
+            password: signupCreds.password,
+            'password-confirmation': 'badpass'
+          })
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(422)
+            const msg = JSON.parse(res.text).message
+            expect(msg).to.equal('Password confirmation does not match')
+            done()
+          })
+      })
+      it('should 302 to /500 when sending credentials already associated with a user',
+        function (done) {
+          request(app)
+            .post('/signup')
+            .send({
+              email: userCreds.email,
+              password: userCreds.password,
+              'password-confirmation': userCreds.password
+            })
+            .end(function (err, res) {
+              proctor.check(err)
+              expect(res.statusCode).to.equal(302)
+              expect(res.text).to.equal('Found. Redirecting to /500')
+              done()
+            })
+        })
+      it('should 302 to /profile when sent valid signup credentials',
+        function (done) {
+          request(app)
+            .post('/signup')
+            .send(signupCreds)
+            .end(function (err, res) {
+              proctor.check(err)
+              expect(res.statusCode).to.equal(302)
+              expect(res.text).to.equal('Found. Redirecting to /profile')
+              done()
+            })
+        })
     })
+  })
+
+  // Cleanup
+  after(async function () {
+    await User.remove({ email: userCreds.email })
+    await authenticatedUser.get('/logout')
   })
 })

@@ -16,31 +16,48 @@ describe('/profile', function () {
     const user = new User({ email: userCreds.email })
     await user.setPassword(userCreds.password)
     await user.save()
-    await authenticatedUser
-      .post('/login')
-      .send(userCreds)
-      .end(function (err, res) {
-        proctor.check(err)
-        expect(res.statusCode).to.equal(302)
-        expect(res.text).to.equal('Found. Redirecting to /profile')
-      })
+    await authenticatedUser.post('/login').send(userCreds)
   })
 
   // Tests
   describe('GET', function () {
-    describe('authenticated', function () {
-      it('should 200')
+    describe('Authenticated', function () {
+      it('should 200', function (done) {
+        authenticatedUser
+          .get('/profile')
+          .expect(200, done)
+      })
     })
-    describe('unauthenticated', function () {
-      it('should 302 to /login')
+    describe('Unauthenticated', function () {
+      it('should 302 to /401', function (done) {
+        request(app)
+          .get('/profile')
+          .send(userCreds)
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(302)
+            expect(res.text).to.equal('Found. Redirecting to /401')
+            done()
+          })
+      })
     })
   })
   describe('POST', function () {
-    it('should 404')
+    it('should 404', function (done) {
+      authenticatedUser
+        .post('/profile')
+        .send(userCreds)
+        .end(function (err, res) {
+          proctor.check(err)
+          expect(res.statusCode).to.equal(404)
+          done()
+        })
+    })
   })
 
   // Cleanup
   after(async function () {
-    await User.remove({})
+    await authenticatedUser.get('/logout')
+    await User.remove({ email: userCreds.email })
   })
 })

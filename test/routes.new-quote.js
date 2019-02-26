@@ -16,36 +16,31 @@ describe('/quotes/new', function () {
     const user = new User({ email: userCreds.email })
     await user.setPassword(userCreds.password)
     await user.save()
-    await authenticatedUser
-      .post('/login')
-      .send(userCreds)
-      .end(function (err, res) {
-        proctor.check(err)
-        expect(res.statusCode).to.equal(302)
-        expect(res.text).to.equal('Found. Redirecting to /profile')
-      })
+    await authenticatedUser.post('/login').send(userCreds)
   })
 
   // Tests
   describe('GET', function () {
-    describe('authenticated', function () {
+    describe('Authenticated', function () {
       it('should 200')
     })
-    describe('unauthenticated', function () {
-      it('should 302 to /login')
+    describe('Unauthenticated', function () {
+      it('should 302 to /401')
     })
   })
   describe('POST', function () {
-    describe('authenticated', function () {
-      it('should 302 to /quotes when sent valid credentials')
+    describe('Authenticated', function () {
+      it('should 302 to /quotes when sent valid quote data')
+      it('should 302 to /500 when sent invalid quote data')
     })
-    describe('unauthenticated', function () {
+    describe('Unauthenticated', function () {
       it('should 302 to /login')
     })
   })
 
   // Cleanup
   after(async function () {
-    await User.remove({})
+    await authenticatedUser.get('/logout')
+    await User.remove({ email: userCreds.email })
   })
 })

@@ -8,32 +8,75 @@ const proctor = require('@test/proctor')
 const User = require('@models/user').model
 const expect = require('chai').expect
 
-const userCreds = { email: 'been@here.com', password: 'passw0rd' }
+const userCreds = { email: 'temp@user.com', password: 'temp' }
 const authenticatedUser = request.agent(app)
 
 describe('/profile/delete', function () {
-  // Setup test environment with an authenticated user account
+  // Set up authenticated user
   before(async function () {
     const user = new User({ email: userCreds.email })
     await user.setPassword(userCreds.password)
     await user.save()
-    await authenticatedUser
-      .post('/login')
-      .send(userCreds)
-      .end(function (err, res) {
-        proctor.check(err)
-        expect(res.statusCode).to.equal(302)
-        expect(res.text).to.equal('Found. Redirecting to /profile')
-      })
+    await authenticatedUser.post('/login').send(userCreds)
   })
 
   // Tests
-  it('should 302 to /login if requested by an unauthenticated user')
-
-  it('should 302 to / if requested by an authenticated user')
+  describe('GET', function () {
+    describe('Unauthenticated', function () {
+      it('should 404', function (done) {
+        request(app)
+          .get('/profile/delete')
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(404)
+            done()
+          })
+      })
+    })
+    describe('Authenticated', function () {
+      it('should 404', function (done) {
+        authenticatedUser
+          .get('/profile/delete')
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(404)
+            done()
+          })
+      })
+    })
+  })
+  describe('POST', function () {
+    describe('Unauthenticated', function () {
+      it('should 302 to /401', function (done) {
+        request(app)
+          .post('/profile/delete')
+          .end(function (err, res) {
+            proctor.check(err)
+            expect(res.statusCode).to.equal(302)
+            expect(res.text).to.equal('Found. Redirecting to /401')
+            done()
+          })
+      })
+    })
+    describe('Authenticated', function () {
+      describe('Authorized', function () {
+        it('should 302 to /', function (done) {
+          authenticatedUser
+            .post('/profile/delete')
+            .end(function (err, res) {
+              proctor.check(err)
+              expect(res.statusCode).to.equal(302)
+              expect(res.text).to.equal('Found. Redirecting to /')
+              done()
+            })
+        })
+      })
+    })
+  })
 
   // Cleanup
   after(async function () {
-    await User.remove({})
+    await User.remove({ email: userCreds.email })
+    await authenticatedUser.get('/logout')
   })
 })

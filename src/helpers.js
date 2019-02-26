@@ -51,7 +51,6 @@ const newQuote = async (text, author, submittedBy) => {
 }
 
 const generateQuotes = () => {
-  const quotes = []
   newQuote(`Maximum effort.`, `Deadpool`)
   newQuote(`Hierarchies are older than trees.`, `Jordan B. Peterson`)
   newQuote(`Being nice is something stupid people do to hedge their bets.`, `Rick Sanchez`)
@@ -69,5 +68,5 @@ module.exports = {
   newQuote,
   generateQuotes,
   calculateAccuracy,
-  calculateWPM,
+  calculateWPM
 }

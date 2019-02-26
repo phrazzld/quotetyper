@@ -1,12 +1,8 @@
 // src/routes/index.js
 
 const router = require('express').Router()
-const log = require('@root/config').loggers.dev()
 const passport = require('passport')
 const helpers = require('@root/helpers')
-const User = require('@models/user').model
-const Quote = require('@models/quote').model
-const TestResult = require('@models/test-result').model
 const userController = require('@controllers/user')
 const quoteController = require('@controllers/quote')
 const testResultController = require('@controllers/test-result')
@@ -24,7 +20,7 @@ router.post('/login',
 )
 router.get('/signup', userController.getSignup)
 router.post('/signup', userController.postSignup)
-router.get('/logout', helpers.forceAuth, userController.getLogout)
+router.get('/logout', userController.getLogout)
 router.get('/profile', helpers.forceAuth, userController.getProfile)
 router.get('/profile/edit', helpers.forceAuth, userController.getProfileEdit)
 router.post('/profile/edit', helpers.forceAuth, userController.postProfileEdit)

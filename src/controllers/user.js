@@ -7,10 +7,14 @@ const User = require('@models/user').model
 const TestResult = require('@models/test-result').model
 
 const getLogin = (req, res) => {
-  res.render('login', {
-    title: 'Login',
-    isLoggedIn: helpers.isLoggedIn(req)
-  })
+  if (helpers.isLoggedIn(req)) {
+    res.redirect('/profile')
+  } else {
+    res.render('login', {
+      title: 'Login',
+      isLoggedIn: helpers.isLoggedIn(req)
+    })
+  }
 }
 
 const postLogin = (req, res) => {
@@ -18,10 +22,14 @@ const postLogin = (req, res) => {
 }
 
 const getSignup = (req, res) => {
-  res.render('signup', {
-    title: 'Signup',
-    isLoggedIn: helpers.isLoggedIn(req)
-  })
+  if (helpers.isLoggedIn(req)) {
+    res.redirect('/profile')
+  } else {
+    res.render('signup', {
+      title: 'Signup',
+      isLoggedIn: helpers.isLoggedIn(req)
+    })
+  }
 }
 
 const postSignup = async (req, res) => {
