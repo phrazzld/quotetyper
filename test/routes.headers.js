@@ -6,18 +6,6 @@ const app = require('@root/app')
 const expect = require('chai').expect
 const proctor = require('@test/proctor')
 
-/*
-const unrestrictedRoutes = [
-  '/', '/login', '/signup', '/quotes', '/typing-test'
-]
-const restrictedRoutes = [
-  '/profile', '/profile/edit', '/logout', '/test-results/:testResultId', '/profile/delete', '/quotes/new'
-]
-const allRoutes = unrestrictedRoutes.concat(restrictedRoutes)
-const methods = ['GET', 'POST']
-const auths = ['Authenticated', 'Unauthenticated']
-*/
-
 describe('Headers', function () {
   it('should be properly set', function (done) {
     request(app)
@@ -44,26 +32,3 @@ describe('Headers', function () {
       })
   })
 })
-
-/*
-allRoutes.forEach(function (route) {
-  methods.forEach(function (method) {
-    auths.forEach(function (auth) {
-      describe(`${method} ${route} (${auth})`, function () {
-        it('should have properly set headers', function (done) {
-          let command = request(app).get
-          if (method === 'GET' && auth === 'Authenticated') {
-            command = proctor.authenticatedUser.get
-          } else if (method === 'POST' && auth === 'Authenticated') {
-            command = proctor.authenticatedUser.post
-          } else if (method === 'POST' && auth === 'Unauthenticated') {
-            command = request(app).post
-          }
-          const req = auth === 'Authenticated' ? authenticatedUser : request(app)
-          req
-        })
-      })
-    })
-  })
-})
-*/

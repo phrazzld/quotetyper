@@ -33,9 +33,7 @@ describe('/login', function () {
         authenticatedUser
           .get('/login')
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /profile')
+            proctor.expectRedirect(err, res, '/profile')
             done()
           })
       })
@@ -48,9 +46,7 @@ describe('/login', function () {
           .post('/login')
           .send(userCreds)
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /profile')
+            proctor.expectRedirect(err, res, '/profile')
             done()
           })
       })
@@ -59,9 +55,7 @@ describe('/login', function () {
           .post('/login')
           .send({ email: userCreds.email, password: 'badpass' })
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /login')
+            proctor.expectRedirect(err, res, '/login')
             done()
           })
       })
@@ -72,9 +66,7 @@ describe('/login', function () {
           .post('/login')
           .send(userCreds)
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /profile')
+            proctor.expectRedirect(err, res, '/profile')
             done()
           })
       })

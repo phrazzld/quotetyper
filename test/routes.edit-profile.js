@@ -26,9 +26,7 @@ describe('/profile/edit', function () {
         request(app)
           .get('/profile/edit')
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /401')
+            proctor.expectRedirect(err, res, '/401')
             done()
           })
       })
@@ -37,11 +35,7 @@ describe('/profile/edit', function () {
       it('should 200', function (done) {
         authenticatedUser
           .get('/profile/edit')
-          .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(200)
-            done()
-          })
+          .expect(200, done)
       })
     })
   })
@@ -56,9 +50,7 @@ describe('/profile/edit', function () {
             'password-confirmation': userCreds.password
           })
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /401')
+            proctor.expectRedirect(err, res, '/401')
             done()
           })
       })
@@ -73,9 +65,7 @@ describe('/profile/edit', function () {
             'password-confirmation': userCreds.password
           })
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /profile')
+            proctor.expectRedirect(err, res, '/profile')
             done()
           })
       })

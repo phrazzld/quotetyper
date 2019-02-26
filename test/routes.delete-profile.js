@@ -51,9 +51,7 @@ describe('/profile/delete', function () {
         request(app)
           .post('/profile/delete')
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /401')
+            proctor.expectRedirect(err, res, '/401')
             done()
           })
       })
@@ -64,9 +62,7 @@ describe('/profile/delete', function () {
           authenticatedUser
             .post('/profile/delete')
             .end(function (err, res) {
-              proctor.check(err)
-              expect(res.statusCode).to.equal(302)
-              expect(res.text).to.equal('Found. Redirecting to /')
+              proctor.expectRedirect(err, res, '/')
               done()
             })
         })

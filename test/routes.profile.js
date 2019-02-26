@@ -34,9 +34,7 @@ describe('/profile', function () {
           .get('/profile')
           .send(userCreds)
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /401')
+            proctor.expectRedirect(err, res, '/401')
             done()
           })
       })

@@ -25,9 +25,7 @@ describe('/signup', function () {
         authenticatedUser
           .get('/signup')
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /profile')
+            proctor.expectRedirect(err, res, '/profile')
             done()
           })
       })
@@ -51,9 +49,7 @@ describe('/signup', function () {
             'password-confirmation': userCreds.password
           })
           .end(function (err, res) {
-            proctor.check(err)
-            expect(res.statusCode).to.equal(302)
-            expect(res.text).to.equal('Found. Redirecting to /500')
+            proctor.expectRedirect(err, res, '/500')
             done()
           })
       })
@@ -117,9 +113,7 @@ describe('/signup', function () {
               'password-confirmation': userCreds.password
             })
             .end(function (err, res) {
-              proctor.check(err)
-              expect(res.statusCode).to.equal(302)
-              expect(res.text).to.equal('Found. Redirecting to /500')
+              proctor.expectRedirect(err, res, '/500')
               done()
             })
         })
@@ -129,9 +123,7 @@ describe('/signup', function () {
             .post('/signup')
             .send(signupCreds)
             .end(function (err, res) {
-              proctor.check(err)
-              expect(res.statusCode).to.equal(302)
-              expect(res.text).to.equal('Found. Redirecting to /profile')
+              proctor.expectRedirect(err, res, '/profile')
               done()
             })
         })
