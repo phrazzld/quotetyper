@@ -11,6 +11,11 @@ const Quote = require('@models/quote').model
 
 const userCreds = { email: 'temp@user.com', password: 'passw0rd' }
 var testResultData = { wpm: 120, accuracy: 0.9876 }
+var testResultPostData = {
+  submission: 'Hey this is a submission.',
+  elapsedTime: 248,
+  quoteId: null
+}
 const authenticatedUser = request.agent(app)
 
 describe('Routes for Test Results', function () {
@@ -24,6 +29,7 @@ describe('Routes for Test Results', function () {
       const quote = new Quote({ text: 'Testing testing one two', author: 'Mike One' })
       testResultData.userId = user._id
       testResultData.quote = quote
+      testResultPostData.quoteId = quote._id
       const testResult = new TestResult(testResultData)
       await Promise.all([quote.save(), testResult.save()])
     } catch (err) {
@@ -50,17 +56,23 @@ describe('Routes for Test Results', function () {
     })
     describe('POST', function () {
       describe('Authenticated', function () {
-        it('should 302 to /profile')
+        it('should 302 to /test-results/:testResultId', function (done) {
+          authenticatedUser
+            .post('/test-results')
+            .send(testResultPostData)
+            .end(function (err, res) {
+              proctor.expectRedirect(err, res, `${res.header.location}`)
+              done()
+            })
+        })
       })
       describe('Unauthenticated', function () {
         it('should 302 to /401', function (done) {
           request(app)
             .post('/test-results')
-            .send(testResultData)
+            .send(testResultPostData)
             .end(function (err, res) {
-              proctor.check(err)
-              expect(res.statusCode).to.equal(302)
-              expect(res.text).to.equal('Found. Redirecting to /401')
+              proctor.expectRedirect(err, res, '/401')
               done()
             })
         })
@@ -85,9 +97,7 @@ describe('Routes for Test Results', function () {
           await request(app)
             .get(`/test-results/${testResult._id}`)
             .end(function (err, res) {
-              proctor.check(err)
-              expect(res.statusCode).to.equal(302)
-              expect(res.text).to.equal('Found. Redirecting to /401')
+              proctor.expectRedirect(err, res, '/401')
             })
         })
       })

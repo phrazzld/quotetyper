@@ -1,8 +1,8 @@
 <%- include('header') %>
   <h2>New Quote</h2>
   <form action='/quotes/new' method='POST'>
-    Text: <textarea name='new-quote-text' id='new-quote-text'></textarea><br>
-    Author: <input type='text' name='new-quote-author' id='new-quote-author'><br>
+    Text: <textarea name='text' id='new-quote-text'></textarea><br>
+    Author: <input type='text' name='author' id='new-quote-author'><br>
     <input type='submit' value='Submit'>
   </form>
 <%- include('footer') %>

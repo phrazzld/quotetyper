@@ -27,8 +27,8 @@ const getNewQuote = (req, res) => {
 
 const postNewQuote = async (req, res) => {
   const { body: {
-    'new-quote-text': quoteText,
-    'new-quote-author': quoteAuthor
+    text: quoteText,
+    author: quoteAuthor
   } } = req
   try {
     await helpers.newQuote(quoteText, quoteAuthor, helpers.getUserId(req))

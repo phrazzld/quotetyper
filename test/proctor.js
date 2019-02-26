@@ -15,6 +15,12 @@ const check = err => {
   }
 }
 
+const expectRedirect = (err, res, redirectLocation) => {
+  check(err)
+  expect(res.statusCode).to.equal(302)
+  expect(res.text).to.equal(`Found. Redirecting to ${redirectLocation}`)
+}
+
 before(function (done) {
   mongoose.connect(config.mongoTestUrl)
   mongoose.connection
@@ -33,5 +39,6 @@ after(function (done) {
 })
 
 module.exports = {
-  check
+  check,
+  expectRedirect
 }
