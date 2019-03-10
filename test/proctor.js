@@ -2,7 +2,6 @@
 
 require('module-alias/register')
 const config = require('@root/config')
-const app = require('@root/app')
 const log = config.loggers.test()
 const expect = require('chai').expect
 const mongoose = require('mongoose')

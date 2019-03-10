@@ -18,6 +18,7 @@ describe('Headers', function () {
       .expect('x-xss-protection', '1; mode=block')
       .expect('content-security-policy', /default-src \'self\'/)
       .expect('content-security-policy', /script-src \'self\' \'unsafe-inline\'/)
+      .expect('content-security-policy', /style-src \'self\' \'unsafe-inline\'/)
       .expect('x-permitted-cross-domain-policies', 'none')
       .expect('feature-policy', /payment 'none'/)
       .expect('feature-policy', /sync-xhr 'none'/)
