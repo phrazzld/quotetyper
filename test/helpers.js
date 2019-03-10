@@ -152,9 +152,13 @@ describe('Helpers', function () {
   })
   describe('generateQuotes', function () {
     it('should populate the quote db with some personal favorites', async function () {
-      await helpers.generateQuotes()
-      const count = await Quote.countDocuments({})
-      expect(count).to.equal(7)
+      try {
+        await helpers.generateQuotes()
+        const count = await Quote.countDocuments({})
+        expect(count).to.equal(7)
+      } catch (err) {
+        proctor.check(err)
+      }
     })
     after(async function () {
       try {
